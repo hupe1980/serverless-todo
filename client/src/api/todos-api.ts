@@ -1,92 +1,89 @@
-import { apiEndpoint } from '../config'
-import { Todo } from '../types/Todo'
-import { CreateTodoRequest } from '../types/CreateTodoRequest'
-import Axios from 'axios'
-import { UpdateTodoRequest } from '../types/UpdateTodoRequest'
+import { apiEndpoint } from '../config';
+import { Todo } from '../types/Todo';
+import { CreateTodoRequest } from '../types/CreateTodoRequest';
+import Axios from 'axios';
+import { UpdateTodoRequest } from '../types/UpdateTodoRequest';
 
 export async function getTodos(idToken: string): Promise<Todo[]> {
-  console.log('Fetching todos')
+    console.log('Fetching todos');
 
-  const response = await Axios.get(`${apiEndpoint}/todos`, {
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${idToken}`
-    }
-  })
-  console.log('Todos:', response.data)
-  return response.data.items
+    const response = await Axios.get(`${apiEndpoint}/todos`, {
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${idToken}`,
+        },
+    });
+    console.log('Todos:', response.data);
+    return response.data.items;
 }
 
 export async function createTodo(
-  idToken: string,
-  newTodo: CreateTodoRequest
+    idToken: string,
+    newTodo: CreateTodoRequest,
 ): Promise<Todo> {
-  const response = await Axios.post(
-    `${apiEndpoint}/todos`,
-    JSON.stringify(newTodo),
-    {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${idToken}`
-      }
-    }
-  )
-  return response.data.newItem
+    const response = await Axios.post(
+        `${apiEndpoint}/todos`,
+        JSON.stringify(newTodo),
+        {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${idToken}`,
+            },
+        },
+    );
+    return response.data.newItem;
 }
 
 export async function patchTodo(
-  idToken: string,
-  todoId: string,
-  updatedTodo: UpdateTodoRequest
+    idToken: string,
+    todoId: string,
+    updatedTodo: UpdateTodoRequest,
 ): Promise<void> {
-  await Axios.patch(
-    `${apiEndpoint}/todos/${todoId}`,
-    JSON.stringify(updatedTodo),
-    {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${idToken}`
-      }
-    }
-  )
+    await Axios.patch(
+        `${apiEndpoint}/todos/${todoId}`,
+        JSON.stringify(updatedTodo),
+        {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${idToken}`,
+            },
+        },
+    );
 }
 
 export async function deleteTodo(
-  idToken: string,
-  todoId: string
+    idToken: string,
+    todoId: string,
 ): Promise<void> {
-  await Axios.delete(`${apiEndpoint}/todos/${todoId}`, {
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${idToken}`
-    }
-  })
+    await Axios.delete(`${apiEndpoint}/todos/${todoId}`, {
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${idToken}`,
+        },
+    });
 }
 
 export async function getUploadUrl(
-  idToken: string,
-  todoId: string
+    idToken: string,
+    todoId: string,
 ): Promise<string> {
-  const response = await Axios.post(
-    `${apiEndpoint}/todos/${todoId}/attachment`,
-    '',
-    {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${idToken}`
-      }
-    }
-  )
-  return response.data.uploadUrl
+    const response = await Axios.post(
+        `${apiEndpoint}/todos/${todoId}/attachment`,
+        '',
+        {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${idToken}`,
+            },
+        },
+    );
+    return response.data.uploadUrl;
 }
 
-export async function uploadFile(
-  uploadUrl: string,
-  file: File
-): Promise<void> {
-  await Axios.put(uploadUrl, file, {
-    headers: {
-      'Content-Type': file.type
-    }
-  })
+export async function uploadFile(uploadUrl: string, file: File): Promise<void> {
+    await Axios.put(uploadUrl, file, {
+        headers: {
+            'Content-Type': file.type,
+        },
+    });
 }

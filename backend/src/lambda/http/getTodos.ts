@@ -1,29 +1,33 @@
-import { APIGatewayProxyEvent, APIGatewayProxyResult, APIGatewayProxyHandler } from 'aws-lambda'
+import {
+    APIGatewayProxyEvent,
+    APIGatewayProxyResult,
+    APIGatewayProxyHandler,
+} from 'aws-lambda';
 import * as middy from 'middy';
 import { cors } from 'middy/middlewares';
-import 'source-map-support/register'
+import 'source-map-support/register';
 
 import { getAllTodos } from '../../businessLogic/todos';
-import { createLogger } from '../../utils/logger'
+import { createLogger } from '../../utils/logger';
 
-const logger = createLogger('getTodosHandler')
+const logger = createLogger('getTodosHandler');
 
-const getTodosHandler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-  logger.info('Get todos', event)
-  
-  const authorization = event.headers.Authorization
-  const split = authorization.split(' ')
-  const jwtToken = split[1]
+const getTodosHandler: APIGatewayProxyHandler = async (
+    event: APIGatewayProxyEvent,
+): Promise<APIGatewayProxyResult> => {
+    logger.info('Get todos', event);
+    const authorization = event.headers.Authorization;
+    const split = authorization.split(' ');
+    const jwtToken = split[1];
 
-  const todos = await getAllTodos(jwtToken)
+    const todos = await getAllTodos(jwtToken);
 
-  return {
-    statusCode: 200,
-    body: JSON.stringify({
-      items: todos
-    })
-  };
-}
+    return {
+        statusCode: 200,
+        body: JSON.stringify({
+            items: todos,
+        }),
+    };
+};
 
-export const handler = middy(getTodosHandler)
-  .use(cors({ credentials: true }));
+export const handler = middy(getTodosHandler).use(cors({ credentials: true }));

@@ -2,26 +2,24 @@ import * as uuid from 'uuid';
 
 import { TodoItem } from '../models/TodoItem';
 import { TodoAccess } from '../dataLayer/TodoAccess';
-import { CreateTodoRequest } from '../requests/CreateTodoRequest'
-import { parseUserId } from '../auth/utils'
+import { CreateTodoRequest } from '../requests/CreateTodoRequest';
+import { parseUserId } from '../auth/utils';
 import { UpdateTodoRequest } from '../requests/UpdateTodoRequest';
-
 
 const todoAccess = new TodoAccess();
 
 export async function getAllTodos(jwtToken: string): Promise<TodoItem[]> {
-    const userId = parseUserId(jwtToken)
+    const userId = parseUserId(jwtToken);
 
     return todoAccess.getAllTodos(userId);
 }
 
 export async function createTodo(
     createTodoRequest: CreateTodoRequest,
-    jwtToken: string
+    jwtToken: string,
 ): Promise<TodoItem> {
-
-    const itemId = uuid.v4()
-    const userId = parseUserId(jwtToken)
+    const itemId = uuid.v4();
+    const userId = parseUserId(jwtToken);
 
     return todoAccess.createTodo({
         todoId: itemId,
@@ -29,14 +27,14 @@ export async function createTodo(
         name: createTodoRequest.name,
         dueDate: createTodoRequest.dueDate,
         createdAt: new Date().toISOString(),
-        done: false
-    })
+        done: false,
+    });
 }
 
 export async function updateTodo(
     todoId: string,
     updateTodoRequest: UpdateTodoRequest,
-    jwtToken: string
+    jwtToken: string,
 ): Promise<void> {
     const userId = parseUserId(jwtToken);
     const todo = await todoAccess.getTodo(todoId, userId);
@@ -46,21 +44,21 @@ export async function updateTodo(
 
 export async function deleteTodo(
     todoId: string,
-    jwtToken: string
+    jwtToken: string,
 ): Promise<void> {
     const userId = parseUserId(jwtToken);
     const todo = await todoAccess.getTodo(todoId, userId);
-    
+
     todoAccess.deleteTodo(todo.todoId, todo.createdAt);
 }
 
 export async function setAttachmentUrl(
-   todoId: string,
-   attachmentUrl: string,
-   jwtToken: string 
+    todoId: string,
+    attachmentUrl: string,
+    jwtToken: string,
 ): Promise<void> {
     const userId = parseUserId(jwtToken);
     const todo = await todoAccess.getTodo(todoId, userId);
 
-    todoAccess.setAttachmentUrl(todo.todoId, todo.createdAt, attachmentUrl)
+    todoAccess.setAttachmentUrl(todo.todoId, todo.createdAt, attachmentUrl);
 }
